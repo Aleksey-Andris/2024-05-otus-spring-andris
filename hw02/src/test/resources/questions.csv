@@ -1,0 +1,3 @@
+# Добавить сюда своих вопросов. Эту строку надо пропустить при настройке CsvToBean (withSkipLines)
+Some question_1;Some answer_1.1%true|Some answer_1.2%false|Some answer_1.3%false
+Some question_2;Some answer_2.1%false|Some answer_2.2%true
