@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-25--0004-book-genres
+      author: andris
+      createTable:
+        tableName: books_genres
+        columns:
+          - column:
+              name: book_id
+              type: bigint
+          - column:
+              name: genre_id
+              type: bigint
+  - changeSet:
+      id: 2024-07-25--0002-book-genres-keys
+      author: andris
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: book_id
+            baseTableName: books_genres
+            constraintName: fk_book_genre_book
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: books
+        - addForeignKeyConstraint:
+            baseColumnNames: genre_id
+            baseTableName: books_genres
+            constraintName: fk_book_genre_genre
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: genres
