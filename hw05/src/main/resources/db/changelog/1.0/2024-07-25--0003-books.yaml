@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-25--0002-books
+      author: andris
+      createTable:
+        tableName: books
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_book
+          - column:
+              name: title
+              type: varchar(255)
+          - column:
+              name: author_id
+              type: bigint
+  - changeSet:
+      id: 2024-07-25--0002-books-foreign-keys
+      author: andris
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: author_id
+            baseTableName: books
+            constraintName: fk_book_author
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: authors
