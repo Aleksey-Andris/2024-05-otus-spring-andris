@@ -15,7 +15,6 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +121,6 @@ public class JdbcBookRepository implements BookRepository {
         return book;
     }
 
-
     private void batchInsertGenresRelationsFor(Book book) {
         var bathParams = book.getGenres().stream()
                 .map(genre -> new MapSqlParameterSource(Map.of(
@@ -153,20 +151,15 @@ public class JdbcBookRepository implements BookRepository {
 
         @Override
         public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
-            Map<Long, Book> booksMap = new HashMap<>();
+            Book book = null;
             while (rs.next()) {
-                var id = rs.getLong("id");
-                Book book;
-                if (!booksMap.containsKey(id)) {
+                if (book == null) {
                     book = new BookRowMapper().mapRow(rs, rs.getRow());
-                    booksMap.put(id, book);
-                } else {
-                    book = booksMap.get(id);
                 }
                 var genre = new Genre(rs.getLong("genre_id"), rs.getString("genre_name"));
                 book.getGenres().add(genre);
             }
-            return booksMap.values().stream().findFirst().orElse(null);
+            return book;
         }
     }
 
