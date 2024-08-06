@@ -37,18 +37,9 @@ class CommentServiceImplTest {
 
     private List<CommentDTO> dbComment;
 
-    private List<AuthorDTO> dbAuthors;
-
-    private List<GenreDTO> dbGenres;
-
-    private List<BookDTO> dbBooks;
-
     @BeforeEach
     void setUp() {
-        dbAuthors = getDbAuthors();
-        dbGenres = getDbGenres();
-        dbBooks = getDbBooks(dbAuthors, dbGenres);
-        dbComment = getDbComments(dbBooks);
+        dbComment = getDbComments();
     }
 
     @DisplayName("должен загружать комментарий по id")
@@ -68,24 +59,20 @@ class CommentServiceImplTest {
     @ParameterizedTest
     @MethodSource("getDbBooks")
     void shouldReturnCorrectCommentsByBook(BookDTO book) {
-        var expectedComments = dbComment.stream()
-                .filter(comment -> comment.getBook().getId() == book.getId())
-                .toList();
         var actualComments = serviceTest.findByBookId(book.getId());
 
-        assertThat(expectedComments).containsExactlyElementsOf(actualComments);
+        assertThat(actualComments).containsOnly(dbComment.get((int) book.getId() - 1));
     }
 
     @DisplayName("должен сохранять новый комментарий")
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldSaveUpdatedBookComment() {
-        var expectedComment = new CommentDTO(0, "Comment_100500", dbBooks.get(0));
-        var returnedComment = serviceTest.insert(expectedComment.getContent(),
-                expectedComment.getBook().getId());
+        var expectedComment = new CommentDTO(0, "Comment_100500");
+        var returnedComment = serviceTest.insert(expectedComment.getContent(), 1);
         assertThat(returnedComment)
                 .isNotNull()
-                .matches(book -> book.getId() > 0)
+                .matches(comment -> comment.getId() > 0)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(expectedComment);
@@ -95,14 +82,13 @@ class CommentServiceImplTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void save() {
-        var expectedComment = new CommentDTO(1, "Comment_100500", dbBooks.get(1));
+        var expectedComment = new CommentDTO(1, "Comment_100500");
 
         assertThat(serviceTest.findById(expectedComment.getId()))
                 .isPresent();
 
         var returnedComment = serviceTest.update(expectedComment.getId(),
-                expectedComment.getContent(),
-                expectedComment.getBook().getId());
+                expectedComment.getContent(), 1);
 
         assertThat(returnedComment)
                 .isNotNull()
@@ -120,16 +106,8 @@ class CommentServiceImplTest {
     }
 
     private static List<CommentDTO> getDbComments() {
-        var books = getDbBooks();
-        return getDbComments(books);
-    }
-
-    private static List<CommentDTO> getDbComments(List<BookDTO> books) {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new CommentDTO(id,
-                        "Comment_" + id,
-                        books.get(id - 1)
-                ))
+                .map(id -> new CommentDTO(id, "Comment_" + id))
                 .toList();
     }
 

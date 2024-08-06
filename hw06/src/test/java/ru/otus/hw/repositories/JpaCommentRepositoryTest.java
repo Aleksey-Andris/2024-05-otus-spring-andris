@@ -59,7 +59,7 @@ class JpaCommentRepositoryTest {
         var expectedComments = dbComment.stream()
                 .filter(comment -> comment.getBook().getId() == book.getId())
                 .toList();
-        var actualComments = repositoryJpa.findByBook(book);
+        var actualComments = repositoryJpa.findByBookId(book.getId());
 
         assertThat(expectedComments).containsExactlyElementsOf(actualComments);
     }

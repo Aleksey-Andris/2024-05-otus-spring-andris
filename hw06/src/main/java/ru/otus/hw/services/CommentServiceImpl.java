@@ -34,8 +34,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     @Override
     public List<CommentDTO> findByBookId(long bookId) {
-        var book = getBookById(bookId);
-        return commentConverter.modelsToDTO(commentRepository.findByBook(book));
+        return commentConverter.modelsToDTO(commentRepository.findByBookId(bookId));
     }
 
     @Transactional
