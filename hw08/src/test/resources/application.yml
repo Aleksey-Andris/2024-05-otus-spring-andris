@@ -13,7 +13,7 @@ de:
 
 mongock:
   runner-type: "InitializingBean"
-  change-logs-scan-package: ru.otus.hw.mongock.test.changelog
+  change-logs-scan-package: ru.otus.hw.mongo.mongock.test.changelog
   mongo-db:
     write-concern:
       journal: false

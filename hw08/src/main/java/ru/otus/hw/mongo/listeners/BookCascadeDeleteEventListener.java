@@ -1,4 +1,4 @@
-package ru.otus.hw.mongock.listeners;
+package ru.otus.hw.mongo.listeners;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
