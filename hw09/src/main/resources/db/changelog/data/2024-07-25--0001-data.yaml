@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-25--0001-authors-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-07-25--0001-authors.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: authors
+  - changeSet:
+      id: 2024-07-25--0002-genres-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-07-25--0002-genres.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: genres
+  - changeSet:
+      id: 2024-07-25--0003-books-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-07-25--0003-books.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: books
+  - changeSet:
+      id: 2024-07-25--0004-books-genres-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-07-25--0004-books-genres.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: books_genres
+  - changeSet:
+      id: 2024-07-30-0005--comments-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-07-30--0005-comments.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: comments
