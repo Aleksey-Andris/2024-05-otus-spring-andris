@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all authors</title>
+    <title>Books list</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -72,6 +72,11 @@
     </tr>
     </tbody>
 </table>
+<br>
+<a th:href="@{/book/new(authorId=${authorTitleIsVisible?books.get(0).author.id:0})}" href="newBook.html">
+    <button type="button" th:text="#{new-button-caption}">New</button>
+</a>
+<br>
 <br>
 <a th:href ="@{/author}" href="authorList.html">
     <button type="button" th:text="#{author-view-all-action}">Go to authors</button>

@@ -3,11 +3,7 @@ package ru.otus.hw.commands;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.shell.standard.ShellComponent;
 //import org.springframework.shell.standard.ShellMethod;
-import ru.otus.hw.converters.BookToStringConverter;
-import ru.otus.hw.services.BookService;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @SuppressWarnings({"SpellCheckingInspection", "unused"})
 @RequiredArgsConstructor

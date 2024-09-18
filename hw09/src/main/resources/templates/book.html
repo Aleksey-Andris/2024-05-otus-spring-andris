@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all authors</title>
+    <title>Book page</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -50,6 +50,17 @@
             color: red;
         }
     </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/books.png}]]);
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+
 </head>
 <body>
 
@@ -75,7 +86,7 @@
                     th:selected="*{authorId} == ${author.id}">John Doe
             </option>
         </select>
-         <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">Wrong author</div>
+        <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">Wrong author</div>
     </div>
 
     <div id="genre-input" hidden=true class="row">
@@ -85,7 +96,7 @@
                     th:selected="${book.genresIds.contains(genre.id)}">Fantasy
             </option>
         </select>
-         <div class="errors" th:if="${#fields.hasErrors('genresIds')}" th:errors="*{genresIds}">Wrong genres</div>
+        <div class="errors" th:if="${#fields.hasErrors('genresIds')}" th:errors="*{genresIds}">Wrong genres</div>
     </div>
 
     <div id="genre-reader" class="row">
@@ -130,6 +141,11 @@
         <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
     </div>
 
+</form>
+<form id="book-delete-form" action="authorList.html" th:action="'/book/'+${book.id}" th:method="delete">
+            <button id="delete-button" class="destroy" th:text="#{delete-button-caption}"
+                    style="font-weight:bold;background:darkred;color:aliceblue">Delete
+            </button>
 </form>
 <br><a th:href="@{/book(authorId=${book.authorId})}" href="bookList.html">
     <button type="button" th:text="#{go-to-authors-books}">Go to authors books</button>

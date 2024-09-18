@@ -3,10 +3,7 @@ package ru.otus.hw.commands;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.shell.standard.ShellComponent;
 //import org.springframework.shell.standard.ShellMethod;
-import ru.otus.hw.converters.AuthorToStringConverter;
-import ru.otus.hw.services.AuthorService;
 
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 //@ShellComponent

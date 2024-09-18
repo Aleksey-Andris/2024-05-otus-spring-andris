@@ -11,3 +11,7 @@ spring:
     hibernate:
       ddl-auto: none
     generate-ddl: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true

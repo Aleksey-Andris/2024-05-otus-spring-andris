@@ -11,3 +11,7 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: none
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true

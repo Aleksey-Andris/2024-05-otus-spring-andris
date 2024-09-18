@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.BookDTO;
+import ru.otus.hw.dto.BookShortDTO;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
@@ -33,33 +34,39 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<BookDTO> findById(long id) {
-        var bookDTO = bookRepository.findById(id).map(bookConverter::modelToDTO).orElse(null);
+    public Optional<BookShortDTO> findById(long id) {
+        var bookDTO = bookRepository.findById(id).map(bookConverter::modelToShortDTO).orElse(null);
         return Optional.ofNullable(bookDTO);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<BookDTO> findAll() {
-        return bookConverter.modelsToDTO(bookRepository.findAll());
+        return bookConverter.modelsToDTO(bookRepository.findAllByOrderByAuthorFullNameTitle());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<BookDTO> findAllByAuthorId(long authorId) {
+        return bookConverter.modelsToDTO(bookRepository.findAllByAuthorIdOrderByTitle(authorId));
     }
 
     @Transactional
     @Override
-    public BookDTO insert(String title, long authorId, Set<Long> genresIds) {
-        var author = getAuthorById(authorId);
-        var genres = getGenresByIds(genresIds);
-        var book = new Book(0, title, author, genres);
+    public BookDTO insert(BookShortDTO bookShortDTO) {
+        var author = getAuthorById(bookShortDTO.getAuthorId());
+        var genres = getGenresByIds(bookShortDTO.getGenresIds());
+        var book = new Book(0, bookShortDTO.getTitle(), author, genres);
         return bookConverter.modelToDTO(bookRepository.save(book));
     }
 
     @Transactional
     @Override
-    public BookDTO update(long id, String title, long authorId, Set<Long> genresIds) {
-        var book = getBookById(id);
-        var author = getAuthorById(authorId);
-        var genres = getGenresByIds(genresIds);
-        book.setTitle(title);
+    public BookDTO update(BookShortDTO bookDTO) {
+        var book = getBookById(bookDTO.getId());
+        var author = getAuthorById(bookDTO.getAuthorId());
+        var genres = getGenresByIds(bookDTO.getGenresIds());
+        book.setTitle(bookDTO.getTitle());
         book.setAuthor(author);
         book.setGenres(genres);
         return bookConverter.modelToDTO(bookRepository.save(book));
