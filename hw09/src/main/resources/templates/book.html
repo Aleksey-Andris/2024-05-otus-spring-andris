@@ -71,17 +71,17 @@
 </div>
 
 <form id="book-edit-form" action="book.html" th:action="@{/book}" th:method="patch" th:object="${book}">
-    <h3 th:text="#{book-header}">Select language</h3>
+    <h3 th:text="#{book-header}">Books info:</h3>
 
     <div class="row">
         <label for="book-title-input" th:text="#{title-prefix}">Title: </label>
-        <input readonly=true id="book-title-input" name="title" type="text" th:value="*{title}" value="Pinocchio">
+        <input readonly="readonly" id="book-title-input" name="title" type="text" th:value="*{title}" value="Pinocchio">
         <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Wrong title</div>
     </div>
 
     <div class="row">
         <label for="author-select" th:text="#{author-prefix}">Author: </label>
-        <select disabled=true id='author-select' th:field="*{authorId}" style="font-weight:bold;color:black">
+        <select disabled="disabled" id='author-select' th:field="*{authorId}" style="font-weight:bold;color:black">
             <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}"
                     th:selected="*{authorId} == ${author.id}">John Doe
             </option>
@@ -89,7 +89,7 @@
         <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">Wrong author</div>
     </div>
 
-    <div id="genre-input" hidden=true class="row">
+    <div id="genre-input" hidden="hidden" class="row">
         <label for="genre-multi-select" th:text="#{genres-prefix}">Genres: </label>
         <select class="select-multiple" size="6" id="genre-multi-select" th:field="*{genresIds}" multiple="multiple">
             <option th:each="genre : ${allGenres}" th:value="${genre.id}" th:text="${genre.name}"
@@ -112,8 +112,8 @@
 
     <div class="row">
         <button id="edit-hider" type="button" th:text="#{edit-button-caption}">Edit</button>
-        <button hidden=true id="cansel-hider" type="button" th:text="#{cansel-button-caption}">Cansel</button>
-        <button hidden=true id="save-button" type="submit" th:text="#{save-button-caption}">Save</button>
+        <button hidden="hidden" id="cansel-hider" type="button" th:text="#{cansel-button-caption}">Cansel</button>
+        <button hidden="hidden" id="save-button" type="submit" th:text="#{save-button-caption}">Save</button>
     </div>
 
     <script>
@@ -147,10 +147,13 @@
                     style="font-weight:bold;background:darkred;color:aliceblue">Delete
             </button>
 </form>
-<br><a th:href="@{/book(authorId=${book.authorId})}" href="bookList.html">
+<br><a th:href="@{/comment(bookId=${book.id})}" href="commentList.html">
+    <button type="button" th:text="#{show-comments-action}">Show comments</button>
+</a>
+<br><br><a th:href="@{/book(authorId=${book.authorId})}" href="bookList.html">
     <button type="button" th:text="#{go-to-authors-books}">Go to authors books</button>
 </a>
-<br><a th:href="@{/book}" href="bookList.html">
+<br><br><a th:href="@{/book}" href="bookList.html">
     <button type="button" th:text="#{book-view-all-action}">View all books</button>
 </a>
 </body>

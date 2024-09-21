@@ -25,23 +25,24 @@ public class CommentController {
     @GetMapping(value = "comment", params = "bookId")
     public String getByBokId(@PathParam("bookId") long bookId, Model model) {
         List<CommentDTO> comments = commentService.findByBookId(bookId);
-        model.addAttribute("comments", true);
+        model.addAttribute("comments", comments);
+        model.addAttribute("bookId", bookId);
         return "commentList";
     }
 
-    @PatchMapping("comment")
-    public String update(@Valid @ModelAttribute("comment") CommentDTO comment, BindingResult bindingResult, Model model) {
+    @PatchMapping(value = "comment", params = "bookId")
+    public String update(@Valid @ModelAttribute("comment") CommentDTO comment, @PathParam("bookId") long bookId, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "book";
+            return "commentList";
         }
        // commentService.update(comment); //TODO
-        return "redirect:/comment/?bookId=%s".formatted(1); //TODO
+        return "redirect:/comment?bookId=%s".formatted(bookId);
     }
 
-    @DeleteMapping("comment/{id}")
-    public String delete(@PathVariable long id, Model model) {
+    @DeleteMapping(value = "comment/{id}", params = "bookId")
+    public String delete(@PathVariable long id, @PathParam("bookId") long bookId, Model model) {
         commentService.deleteById(id);
-        return "redirect:/comment/?bookId=%s".formatted(1); //TODO
+        return "redirect:/comment?bookId=%s".formatted(bookId);
     }
 
 }
