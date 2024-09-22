@@ -6,5 +6,7 @@ import ru.otus.hw.models.Author;
 import java.util.List;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
+
     List<Author> findAllByOrderByFullName();
+
 }

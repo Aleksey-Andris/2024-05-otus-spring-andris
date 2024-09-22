@@ -66,7 +66,9 @@ class CommentServiceImplTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldSaveUpdatedBookComment() {
         var expectedComment = new CommentDTO(0, "Comment_100500");
-        var returnedComment = serviceTest.insert(expectedComment.getContent(), 1);
+        var returnedComment = serviceTest.insert(new CommentDTO(
+                expectedComment.getId(),
+                expectedComment.getContent()), 1);
         assertThat(returnedComment)
                 .isNotNull()
                 .matches(comment -> comment.getId() > 0)
@@ -84,8 +86,10 @@ class CommentServiceImplTest {
         assertThat(serviceTest.findById(expectedComment.getId()))
                 .isPresent();
 
-        var returnedComment = serviceTest.update(expectedComment.getId(),
-                expectedComment.getContent(), 1);
+        var returnedComment = serviceTest.update(List.of(new CommentDTO(
+                expectedComment.getId(),
+                expectedComment.getContent()
+        ))).get(0);
 
         assertThat(returnedComment)
                 .isNotNull()

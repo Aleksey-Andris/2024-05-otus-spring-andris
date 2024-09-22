@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentsFormDTO {
+public class CommentsForm {
 
     private @Valid List<CommentDTO> comments;
 

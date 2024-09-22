@@ -5,6 +5,8 @@ import ru.otus.hw.dto.AuthorDTO;
 import java.util.List;
 
 public interface AuthorService {
+
     List<AuthorDTO> findAllOrderByFullName();
+
 }
 

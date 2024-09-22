@@ -13,6 +13,10 @@ import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RequiredArgsConstructor
 @Service
@@ -39,19 +43,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDTO insert(String content, long bookId) {
+    public CommentDTO insert(CommentDTO commentDTO, long bookId) {
         var book = getBookById(bookId);
-        var comment =  new Comment(0, content, book);
-        return commentConverter.modelToDTO(commentRepository.save(comment));
-    }
-
-    @Transactional
-    @Override
-    public CommentDTO update(long id, String content, long bookId) {
-        var book = getBookById(bookId);
-        var comment = getCommentById(id);
-        comment.setContent(content);
-        comment.setBook(book);
+        var comment = new Comment(0, commentDTO.getContent(), book);
         return commentConverter.modelToDTO(commentRepository.save(comment));
     }
 
@@ -61,9 +55,21 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.findById(id).ifPresent(commentRepository::delete);
     }
 
-    private Comment getCommentById(long id) {
-        return commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
+    @Override
+    public List<CommentDTO> update(List<CommentDTO> commentsDTO) {
+        var comments = getCommentsByDTO(commentsDTO);
+        var commentsDtoMap = commentsDTO.stream().collect(Collectors.toMap(CommentDTO::getId, commentDTO -> commentDTO));
+        comments.forEach(comment -> commentConverter.updateModelFromDTO(comment, commentsDtoMap.get(comment.getId())));
+        return commentConverter.modelsToDTO(commentRepository.saveAll(comments));
+    }
+
+    private List<Comment> getCommentsByDTO(List<CommentDTO> commentsDTO) {
+        Set<Long> commentsIds = commentsDTO.stream().map(CommentDTO::getId).collect(Collectors.toSet());
+        var comments = commentRepository.findByIdIn(commentsIds);
+        if (isEmpty(comments) || comments.size() != commentsDTO.size()) {
+            throw new EntityNotFoundException("One or all comments with ids %s not found".formatted(commentsIds));
+        }
+        return comments;
     }
 
     private Book getBookById(long bookId) {

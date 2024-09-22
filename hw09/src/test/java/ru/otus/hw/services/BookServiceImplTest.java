@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverterImpl;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BookDTO;
+import ru.otus.hw.dto.BookShortDTO;
 import ru.otus.hw.dto.GenreDTO;
 
 import java.util.List;
@@ -72,9 +73,12 @@ class BookServiceImplTest {
     void shouldSaveNewBook() {
         var expectedBook = new BookDTO(0, "BookTitle_10500", dbAuthors.get(0),
                 List.of(dbGenres.get(0), dbGenres.get(2)));
-        var returnedBook = serviceTest.insert(expectedBook.getTitle(),
+        var returnedBook = serviceTest.insert(new BookShortDTO(
+                expectedBook.getId(),
+                expectedBook.getTitle(),
                 expectedBook.getAuthor().getId(),
-                expectedBook.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet()));
+                expectedBook.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())
+        ));
 
         assertThat(returnedBook)
                 .isNotNull()
@@ -94,10 +98,11 @@ class BookServiceImplTest {
         assertThat(serviceTest.findById(expectedBook.getId()))
                 .isPresent();
 
-        var returnedBook = serviceTest.update(expectedBook.getId(),
+        var returnedBook = serviceTest.update(new BookShortDTO(
+                expectedBook.getId(),
                 expectedBook.getTitle(),
                 expectedBook.getAuthor().getId(),
-                expectedBook.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet()));
+                expectedBook.getGenres().stream().map(GenreDTO::getId).collect(Collectors.toSet())));
 
         assertThat(returnedBook)
                 .isNotNull()

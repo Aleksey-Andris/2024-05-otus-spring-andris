@@ -34,8 +34,8 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<BookShortDTO> findById(long id) {
-        var bookDTO = bookRepository.findById(id).map(bookConverter::modelToShortDTO).orElse(null);
+    public Optional<BookDTO> findById(long id) {
+        var bookDTO = bookRepository.findById(id).map(bookConverter::modelToDTO).orElse(null);
         return Optional.ofNullable(bookDTO);
     }
 
