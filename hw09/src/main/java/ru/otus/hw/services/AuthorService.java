@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AuthorService {
 
-    List<AuthorDTO> findAllOrderByFullName();
+    List<AuthorDTO> findAll();
 
 }
 

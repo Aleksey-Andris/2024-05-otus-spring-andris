@@ -17,7 +17,7 @@ public class AuthorController {
 
     @GetMapping("author")
     public String author(Model model) {
-        List<AuthorDTO> authors = authorService.findAllOrderByFullName();
+        List<AuthorDTO> authors = authorService.findAll();
         model.addAttribute("authors", authors);
         return "authorList";
     }

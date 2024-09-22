@@ -38,7 +38,7 @@ public class BookController {
     public String getById(@PathVariable long id, Model model) {
         var book = bookService.findById(id).orElseThrow(ContentNotFoundException::new);
         var shortBook = bookConverter.fullToShort(book);
-        var authors = authorService.findAllOrderByFullName();
+        var authors = authorService.findAll();
         var allGenres = genreService.findAll();
         List<GenreDTO> bookGenres = allGenres.stream().filter(genre ->
                 shortBook.getGenresIds().contains(genre.getId())).toList();
@@ -51,13 +51,13 @@ public class BookController {
 
     @GetMapping(value = "book/new", params = "authorId")
     public String getNewForm(@RequestParam("authorId") long authorId, Model model) {
-        var authors = authorService.findAllOrderByFullName();
+        var authors = authorService.findAll();
         var allGenres = genreService.findAll();
         var newBook = new BookShortDTO();
         newBook.setAuthorId(authorId);
         model.addAttribute("authors", authors);
         model.addAttribute("allGenres", allGenres);
-        model.addAttribute("newBook", new BookShortDTO());
+        model.addAttribute("newBook", newBook);
         return "newBook";
     }
 

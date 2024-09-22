@@ -1,6 +1,7 @@
 package ru.otus.hw.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,7 +15,9 @@ public class ExceptionHandlerController {
     @ExceptionHandler(ContentNotFoundException.class)
     public ModelAndView handleContentNotFoundException(ContentNotFoundException ex) {
         log.error(ex.getMessage(), ex);
-        return new ModelAndView("err404");
+        var modelAndView = new ModelAndView("err404");
+        modelAndView.setStatus(HttpStatus.NOT_FOUND);
+        return modelAndView;
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -22,6 +25,7 @@ public class ExceptionHandlerController {
         log.error(ex.getMessage(), ex);
         ModelAndView modelAndView = new ModelAndView("err500");
         modelAndView.addObject("message", ex.getMessage());
+        modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         return modelAndView;
     }
 

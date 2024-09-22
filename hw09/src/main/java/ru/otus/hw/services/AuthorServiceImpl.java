@@ -17,7 +17,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorConverter authorConverter;
 
     @Override
-    public List<AuthorDTO> findAllOrderByFullName() {
+    public List<AuthorDTO> findAll() {
         return authorConverter.modelsToDTO(authorRepository.findAllByOrderByFullName());
     }
 
