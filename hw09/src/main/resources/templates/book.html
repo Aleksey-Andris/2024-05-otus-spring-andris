@@ -143,9 +143,9 @@
 
 </form>
 <form id="book-delete-form" action="authorList.html" th:action="'/book/'+${book.id}" th:method="delete">
-            <button id="delete-button" class="destroy" th:text="#{delete-button-caption}"
-                    style="font-weight:bold;background:darkred;color:aliceblue">Delete
-            </button>
+    <button id="delete-button" class="destroy" th:text="#{delete-button-caption}"
+            style="font-weight:bold;background:darkred;color:aliceblue">Delete
+    </button>
 </form>
 <br><a th:href="@{/comment(bookId=${book.id})}" href="commentList.html">
     <button type="button" th:text="#{show-comments-action}">Show comments</button>
