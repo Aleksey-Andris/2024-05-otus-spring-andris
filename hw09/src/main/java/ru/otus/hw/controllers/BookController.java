@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.BookShortDTO;
-import ru.otus.hw.dto.GenreDTO;
 import ru.otus.hw.exceptions.ContentNotFoundException;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,12 +37,10 @@ public class BookController {
         var shortBook = bookConverter.fullToShort(book);
         var authors = authorService.findAll();
         var allGenres = genreService.findAll();
-        List<GenreDTO> bookGenres = allGenres.stream().filter(genre ->
-                shortBook.getGenresIds().contains(genre.getId())).toList();
         model.addAttribute("book", shortBook);
         model.addAttribute("authors", authors);
         model.addAttribute("allGenres", allGenres);
-        model.addAttribute("bookGenres", bookGenres);
+        model.addAttribute("bookGenres", book.getGenres());
         return "book";
     }
 
