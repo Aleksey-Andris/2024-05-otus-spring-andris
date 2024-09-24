@@ -64,7 +64,7 @@
 <h3 th:text="#{comments-table-header}">Persons:</h3>
 
 <form action="commentList.html" th:action="@{'/comments'(bookId=${bookId})}" th:object="${commentsForm}"
-      method="post">
+      th:method="patch">
     <fieldset>
         <table class="comments">
             <tbody>

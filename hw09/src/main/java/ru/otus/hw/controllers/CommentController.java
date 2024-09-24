@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.otus.hw.dto.CommentDTO;
@@ -44,7 +45,7 @@ public class CommentController {
         return "redirect:/comment?bookId=%s".formatted(bookId);
     }
 
-    @PostMapping(value = "comments", params = "bookId")
+    @PatchMapping(value = "comments", params = "bookId")
     public String update(@Valid @ModelAttribute("commentsForm") CommentsForm commentsForm,
                           BindingResult bindingResult, @PathParam("bookId") long bookId, Model model) {
 
