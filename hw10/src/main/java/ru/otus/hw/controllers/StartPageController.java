@@ -8,7 +8,7 @@ public class StartPageController {
 
     @GetMapping("/")
     public String getStartPage() {
-        return "redirect:/author";
+        return "redirect:/authors-page";
     }
 
 }

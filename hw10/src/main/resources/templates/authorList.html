@@ -59,15 +59,29 @@
         <th th:text="#{author-table-column-action}">Books</th>
     </tr>
     </thead>
-    <tbody>
-    <tr th:each="athor : ${authors}">
-        <td th:text="${athor.fullName}">John Doe</td>
-        <td>
-            <a th:href="@{/book(authorId=${athor.id})}" href="bookList.html" th:text="#{author-table-button-action}">View books</a>
-        </td>
-    </tr>
+    <tbody id="author-table-body">
     </tbody>
 </table>
+<div hidden="hidden" id = "author-table-button-action" th:text="#{author-table-button-action}">View books</div>
+<script th:inline = "javascript">
+    fetch("/author")
+        .then(data => data.json())
+        .then(authors => {
+            const bookTableBody = document.getElementById('author-table-body');
+            authors.forEach(author => {
+                    const authorRow = bookTableBody.insertRow();
+                    authorRow.insertCell().textContent = author.fullName;
+
+                    const authorsBookSell = authorRow.insertCell();
+                    const authorsBookSellLink = document.createElement('a');
+                    authorsBookSellLink.href = `/book?authorId=${author.id}`;
+                    authorsBookSellLink.textContent = document.getElementById('author-table-button-action').innerText;
+                    authorsBookSell.append(authorsBookSellLink);
+                }
+            )
+        })
+</script>
+
 <br><a th:href="@{/book}" href="bookList.html">
     <button type="button" th:text="#{book-view-all-action}">View all books</button>
 </a>
