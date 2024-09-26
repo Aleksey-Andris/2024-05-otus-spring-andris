@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Book page</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        input {
+            width: 240px;
+        }
+
+        select {
+            width: 240px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        .hiddenRow {
+            visibility: hidden;
+        }
+
+        h3 {
+            background-image: url("../static/books.png");
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+        .genres {
+            border: 1px solid steelblue;
+            width: 350px;
+            border-collapse: collapse;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/books.png}]]);
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<h3 th:text="#{lang-switcher-header}">Select language</h3>
+<div>
+    <div><a href="#" th:href="@{/(lang=en)}" th:text="#{en-lang-switch-button-caption}">Language - EN</a></div>
+    <div><a href="#" th:href="@{/(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">Language - RU</a></div>
+</div>
+
+<form id="book-edit-form" action="book.html" th:action="@{/book}" th:method="patch" th:object="${book}">
+    <h3 th:text="#{book-header}">Books info:</h3>
+
+    <div class="row">
+        <label for="book-title-input" th:text="#{title-prefix}">Title: </label>
+        <input readonly="readonly" id="book-title-input" name="title" type="text" th:value="*{title}" value="Pinocchio">
+        <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Wrong title</div>
+    </div>
+
+    <div class="row">
+        <label for="author-select" th:text="#{author-prefix}">Author: </label>
+        <select disabled="disabled" id='author-select' th:field="*{authorId}" style="font-weight:bold;color:black">
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}"
+                    th:selected="*{authorId} == ${author.id}">John Doe
+            </option>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">Wrong author</div>
+    </div>
+
+    <div id="genre-input" hidden="hidden" class="row">
+        <label for="genre-multi-select" th:text="#{genres-prefix}">Genres: </label>
+        <select class="select-multiple" size="6" id="genre-multi-select" th:field="*{genresIds}" multiple="multiple">
+            <option th:each="genre : ${allGenres}" th:value="${genre.id}" th:text="${genre.name}"
+                    th:selected="${book.genresIds.contains(genre.id)}">Fantasy
+            </option>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('genresIds')}" th:errors="*{genresIds}">Wrong genres</div>
+    </div>
+
+    <div id="genre-reader" class="row">
+        <label for="genre-table" th:text="#{genres-prefix}">Genres: </label>
+        <table class="genres">
+            <tbody>
+            <tr id="genre-table" th:each="genre : ${bookGenres}">
+                <td th:text="${genre.name}">Fantasy</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <button id="edit-hider" type="button" th:text="#{edit-button-caption}">Edit</button>
+        <button hidden="hidden" id="cansel-hider" type="button" th:text="#{cansel-button-caption}">Cansel</button>
+        <button hidden="hidden" id="save-button" type="submit" th:text="#{save-button-caption}">Save</button>
+    </div>
+
+    <script>
+        document.getElementById('edit-hider').onclick = function () {
+            document.getElementById('author-select').disabled = false;
+            document.getElementById('book-title-input').readOnly = false;
+            document.getElementById('save-button').hidden = false;
+            document.getElementById('genre-input').hidden = false;
+            document.getElementById('genre-reader').hidden = true;
+            document.getElementById('cansel-hider').hidden = false;
+            document.getElementById('edit-hider').hidden = true;
+        }
+        document.getElementById('cansel-hider').onclick = function () {
+            document.getElementById('author-select').disabled = true;
+            document.getElementById('book-title-input').readOnly = true;
+            document.getElementById('save-button').hidden = true;
+            document.getElementById('genre-input').hidden = true;
+            document.getElementById('genre-reader').hidden = false;
+            document.getElementById('cansel-hider').hidden = true;
+            document.getElementById('edit-hider').hidden = false;
+        }
+    </script>
+
+    <div class="hiddenRow">
+        <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
+    </div>
+
+</form>
+<form id="book-delete-form" action="authorList.html" th:action="'/book/'+${book.id}" th:method="delete">
+    <button id="delete-button" class="destroy" th:text="#{delete-button-caption}"
+            style="font-weight:bold;background:darkred;color:aliceblue">Delete
+    </button>
+</form>
+<br><a th:href="@{/comment(bookId=${book.id})}" href="commentList.html">
+    <button type="button" th:text="#{show-comments-action}">Show comments</button>
+</a>
+<br><br><a th:href="@{/book(authorId=${book.authorId})}" href="bookList.html">
+    <button type="button" th:text="#{go-to-authors-books}">Go to authors books</button>
+</a>
+<br><br><a th:href="@{/book}" href="bookList.html">
+    <button type="button" th:text="#{book-view-all-action}">View all books</button>
+</a>
+</body>
+</html>
