@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List books comments</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .comments {
+            border: 1px solid steelblue;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .content {
+            width: 100%;
+        }
+
+        .comments tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .comments td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/books.png");
+            background-repeat: no-repeat;
+            padding: 9px 9px 9px 50px;
+        }
+
+        form {
+            width: 50%;
+        }
+
+        .errors {
+            color: red;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/books.png}]]);
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h3 th:text="#{lang-switcher-header}">Select language</h3>
+<div>
+    <div><a href="#" th:href="@{/(lang=en)}" th:text="#{en-lang-switch-button-caption}">Language - EN</a></div>
+    <div><a href="#" th:href="@{/(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">Language - RU</a></div>
+</div>
+
+<h3 th:text="#{comments-table-header}">Persons:</h3>
+
+<form action="commentList.html" th:action="@{'/comments'(bookId=${bookId})}" th:object="${commentsForm}"
+      th:method="patch">
+    <fieldset>
+        <table class="comments">
+            <tbody>
+            <tr th:each="comment, itemStat : *{comments}">
+                <td>
+                    <input hidden="hidden" readonly="readonly" th:field="${commentsForm.comments[__${itemStat.index}__].id}"/>
+                    <input class="content" th:field="${commentsForm.comments[__${itemStat.index}__].content}"
+                           value="Bla bla"/>
+                    <div class="errors" th:if="${#fields.hasErrors('comments[__${itemStat.index}__].content')}"
+                         th:errors="*{comments[__${itemStat.index}__].content}">Wrong content
+                    </div>
+                </td>
+                <td style="width: 10%">
+                    <input th:value="#{delete-button-caption}" type="button" value="Delete"
+                           th:with="url=@{'/comment/'+${comment.id}(bookId=${bookId})}"
+                           th:onclick="deleteOne([[${url}]])"
+                           style="font-weight:bold;background:darkred;color:aliceblue"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <button id="save-all-button" type="submit" th:text="#{save-all-button-caption}">Save all</button>
+        </div>
+    </fieldset>
+</form>
+
+<form id="book-comment-form" action="commentList.html" th:action="@{'/comment'(bookId=${bookId})}" th:method="post"
+      th:object="${newComment}">
+
+    <div class="row">
+        <label for="comment-content-input" th:text="#{add-comment-prefix}">Add comment:</label>
+        <input class="content" id="comment-content-input" th:field="*{content}" type="text">
+        <button id="save-button" type="submit" th:text="#{save-button-caption}">Save</button>
+        <div class="errors" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Wrong content</div>
+    </div>
+
+</form>
+
+<br><a th:href="'/book/'+${bookId}" href="book.html">
+    <button type="button" th:text="#{return-to-book-action}">Return to book</button>
+</a>
+
+<script th:inline="javascript">
+    function deleteOne(url) {
+        fetch(url, {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Books list</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors {
+            border: 1px solid steelblue;
+            width: 400px;
+            border-collapse: collapse;
+        }
+
+        .authors tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .authors td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/books.png");
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/books.png}]]);
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h3 th:text="#{lang-switcher-header}">Select language</h3>
+<div>
+    <div><a href="#" th:href="@{/(lang=en)}" th:text="#{en-lang-switch-button-caption}">Language - EN</a></div>
+    <div><a href="#" th:href="@{/(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">Language - RU</a></div>
+</div>
+
+<h3 th:if="${authorTitleIsVisible}" th:text="#{author-prefix}+${books.get(0).author.fullName}">Author: John Doe:</h3>
+
+<h3 th:text="#{books-table-header}">Books:</h3>
+
+<table class="authors">
+    <thead>
+    <tr>
+        <th th:if="${authorColumnIsVisible}" th:text="#{author-field-ful-name}">Name of the author</th>
+        <th th:text="#{book-field-title-name}">Title</th>
+        <th th:text="#{book-table-column-action}">Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:if="${authorColumnIsVisible}" th:text="${book.author.fullName}">John Doe</td>
+        <td th:text="${book.title}">Book about Java</td>
+        <td>
+            <a th:href="'/book/'+${book.id}" href="book.html" th:text="#{book-table-column-action}">Details</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<a th:href="@{/book/new(authorId=${authorTitleIsVisible?books.get(0).author.id:0})}" href="newBook.html">
+    <button type="button" th:text="#{new-button-caption}">New</button>
+</a>
+<br>
+<br>
+<a th:href="@{/author}" href="authorList.html">
+    <button type="button" th:text="#{author-view-all-action}">Go to authors</button>
+</a>
+<br><br>
+<a th:if="${showGoToAllBooks}" th:href="@{/book}" href="bookList.html">
+    <button type="button" th:text="#{book-view-all-action}">View all books</button>
+</a>
+</body>
+</html>
