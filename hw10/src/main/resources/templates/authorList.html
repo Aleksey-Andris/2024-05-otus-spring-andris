@@ -63,20 +63,20 @@
     </tbody>
 </table>
 <div hidden="hidden" id = "author-table-button-action" th:text="#{author-table-button-action}">View books</div>
-<script th:inline = "javascript">
+<script>
     fetch("/author")
         .then(data => data.json())
         .then(authors => {
-            const bookTableBody = document.getElementById('author-table-body');
+            const authorTableBody = document.getElementById('author-table-body');
             authors.forEach(author => {
-                    const authorRow = bookTableBody.insertRow();
+                    const authorRow = authorTableBody.insertRow();
                     authorRow.insertCell().textContent = author.fullName;
 
-                    const authorsBookSell = authorRow.insertCell();
-                    const authorsBookSellLink = document.createElement('a');
-                    authorsBookSellLink.href = `/book?authorId=${author.id}`;
-                    authorsBookSellLink.textContent = document.getElementById('author-table-button-action').innerText;
-                    authorsBookSell.append(authorsBookSellLink);
+                    const authorsBooksCell = authorRow.insertCell();
+                    const authorsBooksCellLink = document.createElement('a');
+                    authorsBooksCellLink.href = `/book?authorId=${author.id}`;
+                    authorsBooksCellLink.textContent = document.getElementById('author-table-button-action').innerText;
+                    authorsBooksCell.append(authorsBooksCellLink);
                 }
             )
         })
