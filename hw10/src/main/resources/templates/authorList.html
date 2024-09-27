@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all authors</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors {
+            border: 1px solid steelblue;
+            width: 400px;
+            border-collapse: collapse;
+        }
+
+        .authors tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .authors td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/books.png");
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/books.png}]]);
+            background-repeat: no-repeat;
+            padding: 9px;
+            padding-left: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h3 th:text="#{lang-switcher-header}">Select language</h3>
+<div>
+    <div><a href="#" th:href="@{/(lang=en)}" th:text="#{en-lang-switch-button-caption}">Language - EN</a></div>
+    <div><a href="#" th:href="@{/(lang=ru)}" th:text="#{ru-lang-switch-button-caption}">Language - RU</a></div>
+</div>
+
+<h3 th:text="#{authors-table-header}">Authors:</h3>
+
+<table class="authors">
+    <thead>
+    <tr>
+        <th th:text="#{author-field-ful-name}">Name of the author</th>
+        <th th:text="#{author-table-column-action}">Books</th>
+    </tr>
+    </thead>
+    <tbody id="author-table-body">
+    </tbody>
+</table>
+<div hidden="hidden" id = "author-table-button-action" th:text="#{author-table-button-action}">View books</div>
+<script>
+    fetch("/author")
+        .then(data => data.json())
+        .then(authors => {
+            const authorTableBody = document.getElementById('author-table-body');
+            authors.forEach(author => {
+                    const authorRow = authorTableBody.insertRow();
+                    authorRow.insertCell().textContent = author.fullName;
+
+                    const authorsBooksCell = authorRow.insertCell();
+                    const authorsBooksCellLink = document.createElement('a');
+                    authorsBooksCellLink.href = `/book?authorId=${author.id}`;
+                    authorsBooksCellLink.textContent = document.getElementById('author-table-button-action').innerText;
+                    authorsBooksCell.append(authorsBooksCellLink);
+                }
+            )
+        })
+</script>
+
+<br><a th:href="@{/book}" href="bookList.html">
+    <button type="button" th:text="#{book-view-all-action}">View all books</button>
+</a>
+</body>
+</html>
