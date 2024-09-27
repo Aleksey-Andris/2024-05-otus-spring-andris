@@ -209,7 +209,7 @@ class BookControllerTest {
     void shouldBeDeleteBook() throws Exception {
         mvc.perform(delete("/book/{id}", 1))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/author"));
+                .andExpect(redirectedUrl("/authors-page"));
 
         verify(bookService, times(1)).deleteById(1);
     }
