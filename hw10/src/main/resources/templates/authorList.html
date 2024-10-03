@@ -64,7 +64,7 @@
 </table>
 <div hidden="hidden" id = "author-table-button-action" th:text="#{author-table-button-action}">View books</div>
 <script>
-    fetch("/author")
+    fetch("/authors")
         .then(data => data.json())
         .then(authors => {
             const authorTableBody = document.getElementById('author-table-body');

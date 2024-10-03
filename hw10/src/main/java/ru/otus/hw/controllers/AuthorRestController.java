@@ -15,7 +15,7 @@ public class AuthorRestController {
 
     private final AuthorService authorService;
 
-    @GetMapping("author")
+    @GetMapping("authors")
     public ResponseEntity<List<AuthorDTO>> getAuthors() {
         var authors = authorService.findAll();
         return ResponseEntity.ok(authors);

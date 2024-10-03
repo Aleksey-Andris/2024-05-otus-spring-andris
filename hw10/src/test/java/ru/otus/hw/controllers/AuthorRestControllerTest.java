@@ -46,7 +46,7 @@ class AuthorRestControllerTest {
     void shouldGetAuthors() throws Exception {
         when(authorService.findAll()).thenReturn(authors);
 
-        MvcResult result = mvc.perform(get("/author"))
+        MvcResult result = mvc.perform(get("/authors"))
                 .andExpect(status().isOk())
                 .andReturn();
 
