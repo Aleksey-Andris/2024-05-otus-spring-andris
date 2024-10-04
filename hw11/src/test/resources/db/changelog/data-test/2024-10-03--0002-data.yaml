@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-10-03--0001-users-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-10-03--0001-users.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: users
+  - changeSet:
+      id: 2024-10-03--0002-roles-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-10-03--0002-roles.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: roles
+  - changeSet:
+      id: 2024-10-03--0003-users-roles-data
+      author: andris
+      context: test
+      runOnChange: true
+      loadData:
+        file: data/2024-10-03--0003-users-roles.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: users_roles
