@@ -30,7 +30,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private List<SimpleGrantedAuthority> mapGrantedAuthority(List<Role> roles) {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .map(role -> {
+                    String roleName = "ROLE_%s".formatted(role.getName());
+                    return new SimpleGrantedAuthority(roleName);
+                })
                 .toList();
     }
 

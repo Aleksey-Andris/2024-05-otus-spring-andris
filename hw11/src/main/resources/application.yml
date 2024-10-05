@@ -15,3 +15,6 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+security:
+  token-sign-key: AnyKey
+  token-valid-second: 1000

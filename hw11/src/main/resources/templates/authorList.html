@@ -71,5 +71,18 @@
 <br><a th:href="@{/book}" href="bookList.html">
     <button type="button" th:text="#{book-view-all-action}">View all books</button>
 </a>
+<br><br><a>
+    <button id="logout-button" type="button" th:text="#{logout-button-caption}" th:onclick="logout()">Logout
+    </button>
+</a>
+<script>
+    function logout() {
+        fetch("/logout").then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+    }
+</script>
 </body>
 </html>

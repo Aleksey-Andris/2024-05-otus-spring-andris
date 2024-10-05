@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html
+        lang="en" xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8"/>
     <title>Book page</title>
@@ -111,7 +113,7 @@
     </div>
 
     <div class="row">
-        <button id="edit-hider" type="button" th:text="#{edit-button-caption}">Edit</button>
+        <button sec:authorize="hasRole('ROLE_MODERATOR')" id="edit-hider" type="button" th:text="#{edit-button-caption}">Edit</button>
         <button hidden="hidden" id="cansel-hider" type="button" th:text="#{cansel-button-caption}">Cansel</button>
         <button hidden="hidden" id="save-button" type="submit" th:text="#{save-button-caption}">Save</button>
     </div>
@@ -142,7 +144,7 @@
     </div>
 
 </form>
-<form id="book-delete-form" action="authorList.html" th:action="'/book/'+${book.id}" th:method="delete">
+<form sec:authorize="hasRole('ROLE_ADMIN')" id="book-delete-form" action="authorList.html" th:action="'/book/'+${book.id}" th:method="delete">
     <button id="delete-button" class="destroy" th:text="#{delete-button-caption}"
             style="font-weight:bold;background:darkred;color:aliceblue">Delete
     </button>
@@ -156,5 +158,18 @@
 <br><br><a th:href="@{/book}" href="bookList.html">
     <button type="button" th:text="#{book-view-all-action}">View all books</button>
 </a>
+<br><br><a>
+    <button id="logout-button" type="button" th:text="#{logout-button-caption}" th:onclick="logout()">Logout
+    </button>
+</a>
+<script>
+    function logout() {
+        fetch("/logout").then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+    }
+</script>
 </body>
 </html>

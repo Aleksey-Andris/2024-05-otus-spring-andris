@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8"/>
     <title>Books list</title>
@@ -72,18 +75,31 @@
     </tr>
     </tbody>
 </table>
-<br>
-<a th:href="@{/book/new(authorId=${authorTitleIsVisible?books.get(0).author.id:0})}" href="newBook.html">
-    <button type="button" th:text="#{new-button-caption}">New</button>
+<a sec:authorize="hasRole('ROLE_MODERATOR')" th:href="@{/book/new(authorId=${authorTitleIsVisible?books.get(0).author.id:0})}"
+   href="newBook.html">
+    <br><button type="button" th:text="#{new-button-caption}">New</button>
 </a>
 <br>
 <br>
 <a th:href="@{/author}" href="authorList.html">
     <button type="button" th:text="#{author-view-all-action}">Go to authors</button>
 </a>
-<br><br>
+<br th:if="${showGoToAllBooks}"><br th:if="${showGoToAllBooks}">
 <a th:if="${showGoToAllBooks}" th:href="@{/book}" href="bookList.html">
     <button type="button" th:text="#{book-view-all-action}">View all books</button>
 </a>
+<br><br><a>
+    <button id="logout-button" type="button" th:text="#{logout-button-caption}" th:onclick="logout()">Logout
+    </button>
+</a>
+<script>
+    function logout() {
+        fetch("/logout").then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+    }
+</script>
 </body>
 </html>
