@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class ApplicationProperty implements SecurityPropertyProvider {
+public class SecurityPropertyProviderImpl implements SecurityPropertyProvider {
 
     @Value("${security.token-valid-second}")
     private int tokenValiditySeconds;

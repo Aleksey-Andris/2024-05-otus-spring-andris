@@ -1,4 +1,4 @@
-package ru.otus.hw.config;
+package ru.otus.hw.controllers;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

@@ -6,7 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.otus.hw.config.SecurityConfig;
+import ru.otus.hw.config.SecurityPropertyProviderImpl;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.dto.AuthorDTO;
 import ru.otus.hw.dto.BookDTO;
@@ -35,22 +40,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Контроллер по операциям с книгами")
 @WebMvcTest({BookController.class, BookConverter.class, ExceptionHandlerController.class})
+@Import({SecurityConfig.class, SecurityPropertyProviderImpl.class})
 class BookControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private BookConverter bookConverter;
-
     @MockBean
     private BookService bookService;
 
     @MockBean
-    private AuthorService authorService;
+    private GenreService genreService;
 
     @MockBean
-    private GenreService genreService;
+    private AuthorService authorService;
+
+    @Autowired
+    private BookConverter bookConverter;
+
+    @MockBean
+    private UserDetailsService userDetailsServiceImpl;
 
     private List<AuthorDTO> authors;
 
@@ -87,6 +96,7 @@ class BookControllerTest {
         shortBooks = List.of(bookShort1, bookShort2, bookShort3);
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_USER")
     @Test
     @DisplayName("Должен загружать страницу просмотра и редактирования книги")
     void shoutBeLoadReadEditPage() throws Exception {
@@ -106,6 +116,7 @@ class BookControllerTest {
                 .andExpect(view().name("book"));
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_USER")
     @Test
     @DisplayName("Должен загружать страницу с ошибкой")
     void shoutBeLoadErrorPage() throws Exception {
@@ -117,6 +128,7 @@ class BookControllerTest {
                 .andExpect(view().name("err404"));
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_MODERATOR")
     @Test
     @DisplayName("Должен загружать страницу создания книги с предустановленным автором")
     void shoutBeLoadCreatePageWithSetAuthor() throws Exception {
@@ -134,6 +146,7 @@ class BookControllerTest {
                 .andExpect(view().name("newBook"));
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_MODERATOR")
     @Test
     @DisplayName("Должен загружать страницу создания книги")
     void shoutBeLoadCreatePage() throws Exception {
@@ -148,6 +161,7 @@ class BookControllerTest {
                 .andExpect(view().name("newBook"));
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_USER")
     @Test
     @DisplayName("Должен загружать страницу просмотра всех книг")
     void shoutBeLoadReadAllPage() throws Exception {
@@ -162,6 +176,7 @@ class BookControllerTest {
                 .andExpect(view().name("bookList"));
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_USER")
     @Test
     @DisplayName("Должен загружать страницу просмотра всех книг автора")
     void shoutBeLoadReadAllPageByAuthor() throws Exception {
@@ -180,6 +195,7 @@ class BookControllerTest {
                 .andExpect(view().name("bookList"));
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_MODERATOR")
     @Test
     @DisplayName("Должен создавать книгу")
     void shouldBeCreateBook() throws Exception {
@@ -192,6 +208,7 @@ class BookControllerTest {
         verify(bookService, times(1)).insert(book);
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_MODERATOR")
     @Test
     @DisplayName("Должен изменять книгу")
     void shouldBeUpdateBook() throws Exception {
@@ -204,6 +221,7 @@ class BookControllerTest {
         verify(bookService, times(1)).update(book);
     }
 
+    @WithMockUser(username = "someUser", authorities = "ROLE_ADMIN")
     @Test
     @DisplayName("Должен удалять книгу")
     void shouldBeDeleteBook() throws Exception {
@@ -212,6 +230,47 @@ class BookControllerTest {
                 .andExpect(redirectedUrl("/author"));
 
         verify(bookService, times(1)).deleteById(1);
+    }
+
+    @Test
+    @DisplayName("Должен перекидывать на страницу  входа")
+    void shoutBeRedirectToLoginPage() throws Exception {
+        mvc.perform(get("/book/{id}", 1))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
+
+        mvc.perform(get("/book/new").param("authorId", "1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
+
+        mvc.perform(get("/book"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+    @WithMockUser(username = "someUser", authorities = {"ROLE_USER", "ROLE_ADMIN"})
+    @Test
+    @DisplayName("Должен возвращать ошибку при попытке изменить или сохранить данные")
+    void shouldBeReturnedErrorWhenAttemptingToChangeOrSaveData() throws Exception {
+        var book = books.get(0);
+        var newBook = new BookShortDTO(1, "New book title", 2, Set.of(1L, 3L));
+
+        mvc.perform(get("/book/new").param("authorId", "0"))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(patch("/book").flashAttr("book", book))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(post("/book").flashAttr("newBook", newBook))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(username = "someUser", authorities = {"ROLE_USER", "ROLE_MODERATOR"})
+    @Test
+    @DisplayName("Должен возвращать ошибку при попытке удалить данные")
+    void shouldBeReturnedErrorWhenAttemptingToDeleteData() throws Exception {
+        mvc.perform(delete("/book/{id}", 1))
+                .andExpect(status().isForbidden());
     }
 
 }
