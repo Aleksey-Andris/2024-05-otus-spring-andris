@@ -14,11 +14,14 @@ public class Application {
                 http://localhost:8080
                 
                 Если просто посмотреть, используй user / user;
-                Если создавать и редактировать контент - moderator / moderator;
+                Если создавать и редактировать контент - moderator / moderator или moderator2 / moderator;
                 Если все вышеперечисленное + удаление, используй  super / super.
                 
                 Посмотреть свои роли можно тут:
                 http://localhost:8080/hello
+                
+                *moderator может редактировать весь стартовый контент. 
+                Новый контент может редактировать его создатель.
                 
                 """);
     }

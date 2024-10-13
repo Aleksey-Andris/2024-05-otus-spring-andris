@@ -2,7 +2,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-10-03--0006-users-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-10-03--0006-users.csv
@@ -15,7 +14,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-10-03--0007-roles-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-10-03--0007-roles.csv
@@ -28,7 +26,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-10-03--0008-users-roles-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-10-03--0008-users-roles.csv

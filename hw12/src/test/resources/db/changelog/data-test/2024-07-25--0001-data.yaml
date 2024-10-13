@@ -2,7 +2,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-07-25--0001-authors-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-07-25--0001-authors.csv
@@ -15,7 +14,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-07-25--0002-genres-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-07-25--0002-genres.csv
@@ -28,7 +26,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-07-25--0003-books-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-07-25--0003-books.csv
@@ -41,7 +38,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-07-25--0004-books-genres-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-07-25--0004-books-genres.csv
@@ -54,7 +50,6 @@ databaseChangeLog:
   - changeSet:
       id: 2024-07-30-0005--comments-data
       author: andris
-      context: test
       runOnChange: true
       loadData:
         file: data/2024-07-30--0005-comments.csv
@@ -64,3 +59,6 @@ databaseChangeLog:
         seperator: ';'
         encoding: UTF-8
         tableName: comments
+        column:
+          name: content
+          type: string
