@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-30--0005-comments
+      author: andris
+      createTable:
+        tableName: comments
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_comments
+          - column:
+              name: content
+              type: clob
+          - column:
+              name: book_id
+              type: bigint
+  - changeSet:
+      id: 2024-07-30--0005-comments-foreign-keys
+      author: andris
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: book_id
+            baseTableName: comments
+            constraintName: fk_comments_books
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: books
