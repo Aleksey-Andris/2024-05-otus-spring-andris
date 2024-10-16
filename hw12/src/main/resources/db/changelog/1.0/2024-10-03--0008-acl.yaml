@@ -15,7 +15,7 @@ databaseChangeLog:
                 primaryKeyName: pk_acl_sid
           - column:
               name: principal
-              type: tinyint(1)
+              type: boolean
               constraints:
                 nullable: false
           - column:
@@ -90,17 +90,17 @@ databaseChangeLog:
                 nullable: false
           - column:
               name: granting
-              type: tinyint(1)
+              type: boolean
               constraints:
                 nullable: false
           - column:
               name: audit_success
-              type: tinyint(1)
+              type: boolean
               constraints:
                 nullable: false
           - column:
               name: audit_failure
-              type: tinyint(1)
+              type: boolean
               constraints:
                 nullable: false
   - changeSet:
@@ -133,7 +133,7 @@ databaseChangeLog:
                 nullable: false
           - column:
               name: object_id_identity
-              type: bigint(20)
+              type: varchar(36)
               constraints:
                 nullable: false
           - column:
@@ -146,7 +146,7 @@ databaseChangeLog:
               defaultValue: null
           - column:
               name: entries_inheriting
-              type: tinyint(1)
+              type: boolean
               constraints:
                 nullable: false
   - changeSet:

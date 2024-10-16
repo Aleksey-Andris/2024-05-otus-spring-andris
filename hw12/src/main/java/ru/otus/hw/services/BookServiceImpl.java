@@ -1,6 +1,8 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
@@ -32,6 +34,8 @@ public class BookServiceImpl implements BookService {
 
     private final BookConverter bookConverter;
 
+    private final AclServiceWrapperService aclServiceWrapperService;
+
     @Transactional(readOnly = true)
     @Override
     public Optional<BookDTO> findById(long id) {
@@ -57,11 +61,15 @@ public class BookServiceImpl implements BookService {
         var author = getAuthorById(bookShortDTO.getAuthorId());
         var genres = getGenresByIds(bookShortDTO.getGenresIds());
         var book = new Book(0, bookShortDTO.getTitle(), author, genres);
-        return bookConverter.modelToDTO(bookRepository.save(book));
+        var newBok =  bookConverter.modelToDTO(bookRepository.save(book));
+        bookShortDTO.setId(newBok.getId());
+        aclServiceWrapperService.createPermission(bookShortDTO, BasePermission.WRITE);
+        return newBok;
     }
 
     @Transactional
     @Override
+    @PreAuthorize("hasPermission(#bookDTO, 'WRITE')")
     public BookDTO update(BookShortDTO bookDTO) {
         var book = getBookById(bookDTO.getId());
         var author = getAuthorById(bookDTO.getAuthorId());
