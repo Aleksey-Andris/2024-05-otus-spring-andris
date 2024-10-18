@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-10-03--0006-roles
+      author: andris
+      createTable:
+        tableName: roles
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_roles
+          - column:
+              name: name
+              type: varchar(255)
+              constraints:
+                nullable: false
+                unique: true
+                uniqueConstraintName: ak_roles

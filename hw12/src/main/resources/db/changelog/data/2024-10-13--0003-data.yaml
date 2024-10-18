@@ -1,0 +1,49 @@
+ databaseChangeLog:
+  - changeSet:
+      id: 2024-10-13--0009-acl-cid-data
+      author: andris
+      runOnChange: true
+      loadData:
+        file: data/2024-10-13--0009-acl-sid.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: acl_sid
+  - changeSet:
+      id: 2024-10-13--0010-acl-classes-data
+      author: andris
+      runOnChange: true
+      loadData:
+        file: data/2024-10-13--0010-acl-classes.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: acl_class
+  - changeSet:
+      id: 2024-10-13--0011-acl-object-identity-data
+      author: andris
+      runOnChange: true
+      loadData:
+        file: data/2024-10-13--0011-acl-object-identity.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: acl_object_identity
+  - changeSet:
+      id: 2024-10-13--0012-acl-entry-data
+      author: andris
+      runOnChange: true
+      loadData:
+        file: data/2024-10-13--0012-acl-entry.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        seperator: ';'
+        encoding: UTF-8
+        tableName: acl_entry
