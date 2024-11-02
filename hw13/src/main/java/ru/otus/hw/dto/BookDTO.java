@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +17,6 @@ public class BookDTO {
 
     private String authorId;
 
-    private Set<String> genresIds;
+    private List<String> genresIds;
 
 }

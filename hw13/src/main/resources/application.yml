@@ -4,16 +4,13 @@ spring:
       port: 8099
       database: hw_db
   datasource:
-    username: postgres
-    password: qwerty
-    url: jdbc:postgresql://localhost:5432/postgres
-  # url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:maindb
   sql:
     init:
       mode: never
   liquibase:
     enabled: true
-    change-log: classpath:/db/changelog/db.changelog-master-test.yaml
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
   jpa:
     hibernate:
       ddl-auto: none
@@ -26,13 +23,16 @@ spring:
     command:
       version:
         enabled: false
-
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
 de:
   flapdoodle:
     mongodb:
       embedded:
         version: 4.0.2
-
 mongock:
   runner-type: InitializingBean
   change-logs-scan-package: ru.otus.hw.mongo.mongock.changelog

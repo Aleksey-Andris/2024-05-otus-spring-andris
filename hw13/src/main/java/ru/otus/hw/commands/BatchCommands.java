@@ -11,9 +11,9 @@ import org.springframework.shell.standard.ShellMethod;
 @RequiredArgsConstructor
 public class BatchCommands {
 
-    private final Job migrateMongoToRelationDbJob;
-
     private final JobLauncher jobLauncher;
+
+    private final Job migrateMongoToRelationDbJob;
 
     @ShellMethod(value = "startMigration", key = "sm")
     public void startMigration() throws Exception {
