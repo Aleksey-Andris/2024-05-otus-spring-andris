@@ -61,8 +61,8 @@ public class BookJdbcCustomWriter implements ItemWriter<BookDTO> {
 
     private void saveGenresLinc(List<BookGenreLink> bookGenreLinks) {
         namedParameterJdbcOperations.batchUpdate("""
-                INSERT INTO books_genres (book_id, genre_id) 
-                VALUES ((SELECT bit.id_inner FROM book_ids_temp bit WHERE id_external = :bookId), 
+                INSERT INTO books_genres (book_id, genre_id)
+                VALUES ((SELECT bit.id_inner FROM book_ids_temp bit WHERE id_external = :bookId),
                         (SELECT bit.id_inner FROM genre_ids_temp bit WHERE id_external = :genreId))
                 """, SqlParameterSourceUtils.createBatch(bookGenreLinks));
     }
