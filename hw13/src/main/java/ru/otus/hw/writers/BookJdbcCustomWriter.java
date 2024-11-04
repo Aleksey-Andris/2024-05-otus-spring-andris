@@ -5,7 +5,6 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.BookDTO;
 import ru.otus.hw.writers.dto.IdLink;
 
@@ -13,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Component
+
 public class BookJdbcCustomWriter implements ItemWriter<BookDTO> {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
