@@ -35,7 +35,7 @@ public class BookJdbcCustomWriter implements ItemWriter<BookDTO> {
                         .stream()
                         .map(genreId -> new BookGenreLink(book.getId(), genreId))
                 ).toList();
-        saveGenresLinc(bookGenreLinks);
+        saveGenresLinks(bookGenreLinks);
     }
 
     private List<IdLink> saveBooks(List<? extends BookDTO> items) {
@@ -59,7 +59,7 @@ public class BookJdbcCustomWriter implements ItemWriter<BookDTO> {
                 SqlParameterSourceUtils.createBatch(idLinks));
     }
 
-    private void saveGenresLinc(List<BookGenreLink> bookGenreLinks) {
+    private void saveGenresLinks(List<BookGenreLink> bookGenreLinks) {
         namedParameterJdbcOperations.batchUpdate("""
                 INSERT INTO books_genres (book_id, genre_id)
                 VALUES ((SELECT bit.id_inner FROM book_ids_temp bit WHERE id_external = :bookId),
