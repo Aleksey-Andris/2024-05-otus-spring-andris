@@ -42,7 +42,7 @@ public class BatchWriterConfig {
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
         writer.setSql("""
                 INSERT INTO comments (content, book_id)
-                VALUES (:content, (SELECT bit.id_inner FROM book_ids_temp bit WHERE id_external = :bookId))
+                VALUES (:content, (SELECT bit.id_inner FROM book_ids_temp bit WHERE bit.id_external = :bookId))
                 """);
         writer.setDataSource(dataSource);
         return writer;

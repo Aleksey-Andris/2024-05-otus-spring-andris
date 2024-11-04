@@ -41,7 +41,7 @@ public class BookJdbcCustomWriter implements ItemWriter<BookDTO> {
         var keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcOperations.batchUpdate("""
                 INSERT INTO books (title, author_id)
-                VALUES (:title, (SELECT ait.id_inner FROM author_ids_temp ait WHERE id_external = :authorId))
+                VALUES (:title, (SELECT ait.id_inner FROM author_ids_temp ait WHERE ait.id_external = :authorId))
                 """, SqlParameterSourceUtils.createBatch(items), keyHolder, new String[]{"id"});
         List<IdLink> idLinks = new LinkedList<>();
         int index = 0;
@@ -61,8 +61,8 @@ public class BookJdbcCustomWriter implements ItemWriter<BookDTO> {
     private void saveGenresLinks(List<BookGenreLink> bookGenreLinks) {
         namedParameterJdbcOperations.batchUpdate("""
                 INSERT INTO books_genres (book_id, genre_id)
-                VALUES ((SELECT bit.id_inner FROM book_ids_temp bit WHERE id_external = :bookId),
-                        (SELECT bit.id_inner FROM genre_ids_temp bit WHERE id_external = :genreId))
+                VALUES ((SELECT bit.id_inner FROM book_ids_temp bit WHERE bit.id_external = :bookId),
+                        (SELECT git.id_inner FROM genre_ids_temp git WHERE git.id_external = :genreId))
                 """, SqlParameterSourceUtils.createBatch(bookGenreLinks));
     }
 
