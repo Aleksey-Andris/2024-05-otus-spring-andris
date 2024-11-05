@@ -1,11 +1,14 @@
 package ru.otus.hw.config;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.jpa.AuthorJpa;
 import ru.otus.hw.models.jpa.BookJpa;
 import ru.otus.hw.models.jpa.CommentJpa;
@@ -35,27 +38,28 @@ class BatchJobConfigTest {
     @Autowired
     private GenreRepositoryJpa genreRepositoryJpa;
 
-    private List<BookJpa> dbBooks;
+    private static List<BookJpa> dbBooks;
 
-    private List<AuthorJpa> dbAuthors;
+    private static List<AuthorJpa> dbAuthors;
 
-    private List<GenreJpa> dbGenres;
+    private static List<GenreJpa> dbGenres;
 
-    private List<CommentJpa> dbComments;
+    private static List<CommentJpa> dbComments;
+
     @Autowired
     private CommentRepositoryJpa commentRepositoryJpa;
 
-    @BeforeEach
-    void setUp() {
-        dbAuthors = getDbAuthors();
-        dbGenres = getDbGenres();
-        dbBooks = getDbBooks(dbAuthors, dbGenres);
-        dbComments = getDbComments(dbBooks);
+    @BeforeAll
+    static void setUp() {
+        dbAuthors = createDbAuthors();
+        dbGenres = createDbGenres();
+        dbBooks = createDbBooks(dbAuthors, dbGenres);
+        dbComments = createDbComments(dbBooks);
     }
 
     @DisplayName("должен сверять список всех авторов")
     @Test
-    void shouldReturnCorrectAuthorsList() {
+    void shouldCheckAuthors() {
         var expectedAuthors = dbAuthors;
         var actualAuthors = authorRepositoryJpa.findAll();
 
@@ -64,7 +68,7 @@ class BatchJobConfigTest {
 
     @DisplayName("должен сверять список всех книг")
     @Test
-    void shouldReturnCorrectBooksList() {
+    void shouldCheckBooks() {
         var expectedBooks = dbBooks;
         var actualBooks = bookRepositoryJpa.findAll();
 
@@ -73,7 +77,7 @@ class BatchJobConfigTest {
 
     @DisplayName("должен сверять список всех жанров")
     @Test
-    void shouldReturnCorrectGenresList() {
+    void shouldCheckGenres() {
         var expectedGenres = dbGenres;
         var actualGenres = genreRepositoryJpa.findAll();
 
@@ -82,20 +86,54 @@ class BatchJobConfigTest {
 
     @DisplayName("должен сверять список всех комментариев")
     @Test
-    void shouldReturnCorrectCommentById() {
+    void shouldCheckComment() {
         var expectedComments = dbComments;
         var actualComments = commentRepositoryJpa.findAll();
 
         assertThat(actualComments).containsExactlyElementsOf(expectedComments);
     }
 
-    private static List<AuthorJpa> getDbAuthors() {
+    @DisplayName("должен сверять связи комментариев с книгами")
+    @ParameterizedTest
+    @MethodSource("getDbBooks")
+    void shouldCheckCommentAndBookLinks(BookJpa book) {
+        var expectedComments = dbComments.stream()
+                .filter(comment -> comment.getBook().getId() == book.getId())
+                .toList();
+        var actualComments = commentRepositoryJpa.findByBookId(book.getId());
+
+        assertThat(expectedComments).containsExactlyElementsOf(actualComments);
+    }
+
+    @DisplayName("должен сверять связи книг и авторов")
+    @ParameterizedTest
+    @MethodSource("getDbBooks")
+    @Transactional(readOnly = true)
+    void shouldCheckBookAndAuthorLinks(BookJpa book) {
+        var expectedAuthor = book.getAuthor();
+        var actualAuthor = bookRepositoryJpa.findById(book.getId()).get().getAuthor();
+
+        assertThat(expectedAuthor.getId()).isEqualTo(actualAuthor.getId());
+    }
+
+    @DisplayName("должен сверять связи книг и жанров")
+    @ParameterizedTest
+    @MethodSource("getDbBooks")
+    @Transactional(readOnly = true)
+    void shouldCheckBookAndGenresLinks(BookJpa book) {
+        var expectedGenres = book.getGenres();
+        var actualGenres = bookRepositoryJpa.findById(book.getId()).get().getGenres();
+
+        assertThat(expectedGenres).containsExactlyElementsOf(actualGenres);
+    }
+
+    private static List<AuthorJpa> createDbAuthors() {
         return IntStream.range(1, 4).boxed()
                 .map(id -> new AuthorJpa(id, "Author_" + id))
                 .toList();
     }
 
-    private static List<BookJpa> getDbBooks(List<AuthorJpa> dbAuthors, List<GenreJpa> dbGenres) {
+    private static List<BookJpa> createDbBooks(List<AuthorJpa> dbAuthors, List<GenreJpa> dbGenres) {
         return IntStream.range(1, 4).boxed()
                 .map(id -> new BookJpa(id,
                         "BookTitle_" + id,
@@ -105,19 +143,23 @@ class BatchJobConfigTest {
                 .toList();
     }
 
-    private static List<GenreJpa> getDbGenres() {
+    private static List<GenreJpa> createDbGenres() {
         return IntStream.range(1, 7).boxed()
                 .map(id -> new GenreJpa(id, "Genre_" + id))
                 .toList();
     }
 
-    private static List<CommentJpa> getDbComments(List<BookJpa> books) {
+    private static List<CommentJpa> createDbComments(List<BookJpa> books) {
         return IntStream.range(1, 4).boxed()
                 .map(id -> new CommentJpa(id,
                         "Comment_" + id,
                         books.get(id - 1)
                 ))
                 .toList();
+    }
+
+    private static List<BookJpa> getDbBooks() {
+        return dbBooks;
     }
 
 }
