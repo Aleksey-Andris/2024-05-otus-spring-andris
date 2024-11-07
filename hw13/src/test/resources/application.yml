@@ -1,0 +1,43 @@
+spring:
+  data:
+    mongodb:
+      database: hw_db
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+  sql:
+    init:
+      mode: never
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: false
+  shell:
+    interactive:
+      enabled: false
+    noninteractive:
+      enabled: false
+    command:
+      version:
+        enabled: false
+  batch:
+    job:
+      enabled: true
+    jdbc:
+      initialize-schema: always
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: ru.otus.hw.mongo.mongock.test.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
