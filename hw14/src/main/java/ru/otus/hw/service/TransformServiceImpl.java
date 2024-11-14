@@ -47,7 +47,7 @@ public class TransformServiceImpl implements TransformService {
                 cocoon.getCaterpillar().getName(),
                 cocoon.getCaterpillar().getSex(),
                 generateForm());
-        log.info("Еhe butterfly was born:\n {}", butterfly);
+        log.info("The butterfly was born:\n {}", butterfly);
         return butterfly;
     }
 
