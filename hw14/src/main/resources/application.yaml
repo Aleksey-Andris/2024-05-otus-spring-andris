@@ -1,0 +1,4 @@
+resources:
+  butterfly-forms: butterfly/forms
+  male-names: names/male.txt
+  female-names: names/female.txt
